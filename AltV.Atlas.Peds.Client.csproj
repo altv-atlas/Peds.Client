@@ -19,14 +19,11 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+        <PackageReference Include="AltV.Atlas.Peds.Shared" Version="1.0.0" />
+        <PackageReference Include="AltV.Atlas.Shared" Version="1.0.0" />
       <PackageReference Include="AltV.Net.Client.Async" Version="15.0.5" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\..\AltV.Atlas.Shared\AltV.Atlas.Shared.csproj" />
-      <ProjectReference Include="..\AltV.Atlas.Peds.Shared\AltV.Atlas.Peds.Shared.csproj" />
     </ItemGroup>
 
 </Project>
