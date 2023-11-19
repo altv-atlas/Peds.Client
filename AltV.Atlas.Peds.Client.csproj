@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <OutputPath>G:\ALTV DEV\_atlas\altv-server\resources\altas-client-cs</OutputPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="AltV.Net.Client.Async" Version="15.0.5" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\AltV.Atlas.Shared\AltV.Atlas.Shared.csproj" />
+      <ProjectReference Include="..\AltV.Atlas.Peds.Shared\AltV.Atlas.Peds.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
