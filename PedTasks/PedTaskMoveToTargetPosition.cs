@@ -17,14 +17,19 @@ public class PedTaskMoveToTargetPosition : PedTaskMoveToTargetPositionBase, IPed
     }
     
     
-    public void Execute( ISharedPed sharedPed )
+    public void OnStart( ISharedPed sharedPed )
     {
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "Execute PedTaskMoveToTargetPosition" );
+        Alt.Log( "OnStart PedTaskMoveToTargetPosition" );
 
 
+        throw new NotImplementedException( );
+    }
+
+    public void OnStop( )
+    {
         throw new NotImplementedException( );
     }
 }

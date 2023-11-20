@@ -12,12 +12,18 @@ public class PedTaskWander : PedTaskWanderBase, IPedTask
     public PedTaskWander( Vector3 position, uint radius, uint minLength, uint timeBetweenWalks ) : base( position, radius, minLength, timeBetweenWalks )
     {
     }
-    public void Execute( ISharedPed sharedPed )
+    public void OnStart( ISharedPed sharedPed )
     {
+        Alt.Log( "OnStart PedTaskWander 1" );
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "Execute PedTaskWander" );
+        Alt.Log( "OnStart PedTaskWander 2" );
         Alt.Natives.TaskWanderInArea( ped.ScriptId, Position.X, Position.Y, Position.Z, Radius, MinLength, TimeBetweenWalks );
+    }
+
+    public void OnStop( )
+    {
+        throw new NotImplementedException( );
     }
 }

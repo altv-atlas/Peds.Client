@@ -6,7 +6,12 @@ namespace AltV.Atlas.Peds.Client.PedTasks;
 
 public class PedTaskIdle : PedTaskIdleBase, IPedTask
 {
-    public void Execute( ISharedPed ped )
+    public void OnStart( ISharedPed ped )
+    {
+        throw new NotImplementedException( );
+    }
+
+    public void OnStop( )
     {
         throw new NotImplementedException( );
     }

@@ -17,12 +17,12 @@ public class PedTaskFollowPlayer : PedTaskFollowPlayerBase, IPedTask
     {
     }
     
-    public void Execute( ISharedPed sharedPed )
+    public void OnStart( ISharedPed sharedPed )
     {
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "Execute PedTaskFollowPlayer" );
+        Alt.Log( "OnStart PedTaskFollowPlayer" );
 
         var player = Alt.GetAllPlayers( ).FirstOrDefault( p => p.RemoteId == TargetId );
 
@@ -31,5 +31,10 @@ public class PedTaskFollowPlayer : PedTaskFollowPlayerBase, IPedTask
         
         Alt.Natives.TaskFollowToOffsetOfEntity( ped.ScriptId, player, 1.5f, 1.5f, 0, 10, -1, 5, true );
 
+    }
+
+    public void OnStop( )
+    {
+        throw new NotImplementedException( );
     }
 }

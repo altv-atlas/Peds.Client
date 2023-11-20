@@ -44,8 +44,11 @@ public class AtlasPed : Ped, IAtlasClientPed
         {
             case "CurrentTask":
             {
-                if( CurrentTask is not null )
-                    SetPedTask( CurrentTask );
+                var oldTask = TypeConverter.FromJson<IPedTask>( (string) oldValue, "Id" );
+                var newTask = TypeConverter.FromJson<IPedTask>( (string) value, "Id" );
+
+                oldTask?.OnStop( );
+                newTask?.OnStart( this );
                 break;
             }
         }
@@ -76,6 +79,7 @@ public class AtlasPed : Ped, IAtlasClientPed
         Alt.OnGameEntityDestroy -= OnGameEntityDestroy;
         Alt.OnNetOwnerChange -= OnNetOwnerChange;
         Alt.OnStreamSyncedMetaChange -= OnStreamSyncedMetaChange;
+        CurrentTask?.OnStop(  );
     }
 
     protected virtual void OnNetOwnerChange( IEntity entity, IPlayer? newOwner, IPlayer? oldOwner )
@@ -94,17 +98,10 @@ public class AtlasPed : Ped, IAtlasClientPed
     {
         Alt.Log( "OnPedSpawn" );
         SetDefaults(  );
-        
-        if( CurrentTask is not null )
-            SetPedTask( CurrentTask );
+
+        CurrentTask?.OnStart( this );
         
         OnSpawn?.Invoke( Position, CurrentTask );
-    }
-
-    public void SetPedTask<T>( T pedTask ) where T : class, IPedTask
-    {
-        Alt.Log( $"SetPedTask" );
-        pedTask.Execute( this );
     }
     
     protected virtual void SetDefaults( )
