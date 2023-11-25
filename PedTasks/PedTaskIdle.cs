@@ -4,15 +4,9 @@ using AltV.Net.Shared.Elements.Entities;
 
 namespace AltV.Atlas.Peds.Client.PedTasks;
 
-public class PedTaskIdle : PedTaskIdleBase, IPedTask
+/// <summary>
+/// A task to make the ped idle (do nothing)
+/// </summary>
+public class PedTaskIdle : PedTaskIdleBase
 {
-    public void OnStart( ISharedPed ped )
-    {
-        throw new NotImplementedException( );
-    }
-
-    public void OnStop( )
-    {
-        throw new NotImplementedException( );
-    }
 }

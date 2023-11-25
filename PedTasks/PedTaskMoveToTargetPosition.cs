@@ -8,28 +8,31 @@ using AltV.Net.Shared.Elements.Entities;
 
 namespace AltV.Atlas.Peds.Client.PedTasks;
 
-public class PedTaskMoveToTargetPosition : PedTaskMoveToTargetPositionBase, IPedTask
+/// <summary>
+/// A task to make the ped move(walk) to a given position
+/// </summary>
+public class PedTaskMoveToTargetPosition : PedTaskMoveToTargetPositionBase
 {
 
+    /// <summary>
+    /// Ad task to make the ped move(walk) to a given position
+    /// </summary>
+    /// <param name="targetPosition">The position to move to</param>
     public PedTaskMoveToTargetPosition( Position targetPosition )
     {
         TargetPosition = targetPosition;
     }
     
-    
-    public void OnStart( ISharedPed sharedPed )
+    /// <summary>
+    /// Triggered when the ped starts the task. Unused on server-side
+    /// </summary>
+    /// <param name="sharedPed">The ped that starts the task</param>
+    public override void OnStart( ISharedPed sharedPed )
     {
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
         Alt.Log( "OnStart PedTaskMoveToTargetPosition" );
 
-
-        throw new NotImplementedException( );
-    }
-
-    public void OnStop( )
-    {
-        throw new NotImplementedException( );
     }
 }

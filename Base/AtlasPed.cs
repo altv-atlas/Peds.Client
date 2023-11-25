@@ -10,8 +10,14 @@ using AltV.Net.Data;
 
 namespace AltV.Atlas.Peds.Client.Base;
 
+/// <summary>
+/// Client-side atlas ped
+/// </summary>
 public class AtlasPed : Ped, IAtlasClientPed
 {
+    /// <summary>
+    /// The task the ped is currently doing (eg wander, follow player, etc)
+    /// </summary>
     public IPedTask? CurrentTask
     {
         get
@@ -21,9 +27,23 @@ public class AtlasPed : Ped, IAtlasClientPed
             return TypeConverter.FromJson<IPedTask>( taskJson, "Id" );
         }
     }
-
+    
+    /// <summary>
+    /// Returns true if the ped is in a vehicle
+    /// </summary>
+    public bool IsInVehicle => Alt.Natives.IsPedInAnyVehicle( ScriptId, false );
+    
+    /// <summary>
+    /// Triggered when the ped spawns
+    /// </summary>
     public event PedSpawnDelegate? OnSpawn;
     
+    /// <summary>
+    /// Client-side atlas ped
+    /// </summary>
+    /// <param name="core">Alt core</param>
+    /// <param name="pedNativePointer">Native pointer</param>
+    /// <param name="id">ID of the ped</param>
     public AtlasPed( ICore core, IntPtr pedNativePointer, uint id ) : base( core, pedNativePointer, id )
     {
         Alt.Log( "PED SPAWN" );
@@ -34,9 +54,16 @@ public class AtlasPed : Ped, IAtlasClientPed
         Alt.OnStreamSyncedMetaChange += OnStreamSyncedMetaChange;
     }
 
+    /// <summary>
+    /// Triggered when streamsyncedmeta data has changed
+    /// </summary>
+    /// <param name="target">The target that had it's meta data changed</param>
+    /// <param name="key">The key of the value that was changed</param>
+    /// <param name="value">The value that changed</param>
+    /// <param name="oldValue">The value prior to change</param>
     protected virtual void OnStreamSyncedMetaChange( IBaseObject target, string key, object value, object oldValue )
     {
-        if( target is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
+        if( target is not IAtlasClientPed atlasPed || atlasPed.Id != Id || NetworkOwner != Alt.LocalPlayer )
             return;
 
         Alt.Log( $"OnStreamSyncedMetaChange"  );
@@ -44,16 +71,27 @@ public class AtlasPed : Ped, IAtlasClientPed
         {
             case "CurrentTask":
             {
-                var oldTask = TypeConverter.FromJson<IPedTask>( (string) oldValue, "Id" );
-                var newTask = TypeConverter.FromJson<IPedTask>( (string) value, "Id" );
+                if( oldValue is string oldValueString )
+                {
+                    var oldTask = TypeConverter.FromJson<IPedTask>( oldValueString, "Id" );
+                    oldTask?.OnStop( );
+                }
 
-                oldTask?.OnStop( );
-                newTask?.OnStart( this );
+                if( value is string valueString )
+                {
+                    var newTask = TypeConverter.FromJson<IPedTask>( valueString, "Id" );
+                    newTask?.OnStart( this );
+                }
+
                 break;
             }
         }
     }
 
+    /// <summary>
+    /// Triggered when a game entity is created
+    /// </summary>
+    /// <param name="entity">The entity</param>
     protected virtual void OnGameEntityCreate( IEntity entity )
     {
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
@@ -66,6 +104,10 @@ public class AtlasPed : Ped, IAtlasClientPed
         OnPedSpawn( );
     }
     
+    /// <summary>
+    /// Triggered when a game entity is destroyed
+    /// </summary>
+    /// <param name="entity">The entity</param>
     protected virtual void OnGameEntityDestroy( IEntity entity )
     {
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
@@ -82,6 +124,12 @@ public class AtlasPed : Ped, IAtlasClientPed
         CurrentTask?.OnStop(  );
     }
 
+    /// <summary>
+    /// Triggered when netowner changes
+    /// </summary>
+    /// <param name="entity">The entity</param>
+    /// <param name="newOwner">New net owner</param>
+    /// <param name="oldOwner">Netowner prior to change</param>
     protected virtual void OnNetOwnerChange( IEntity entity, IPlayer? newOwner, IPlayer? oldOwner )
     {
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
@@ -94,6 +142,9 @@ public class AtlasPed : Ped, IAtlasClientPed
         OnPedSpawn(  );
     }
     
+    /// <summary>
+    /// Triggered when the ped spawns
+    /// </summary>
     protected virtual void OnPedSpawn( )
     {
         Alt.Log( "OnPedSpawn" );
@@ -104,6 +155,9 @@ public class AtlasPed : Ped, IAtlasClientPed
         OnSpawn?.Invoke( Position, CurrentTask );
     }
     
+    /// <summary>
+    /// Set default natives for this ped (make it dumb etc)
+    /// </summary>
     protected virtual void SetDefaults( )
     {
         Alt.Log( $"SetDefaults" );

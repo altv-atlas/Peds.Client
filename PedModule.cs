@@ -1,6 +1,7 @@
 ﻿using AltV.Atlas.Peds.Client.Base;
 using AltV.Atlas.Peds.Client.Factories;
 using AltV.Atlas.Peds.Client.Interfaces;
+using AltV.Atlas.Peds.Shared.Factories;
 using AltV.Atlas.Peds.Shared.Interfaces;
 using AltV.Net.Client;
 using AltV.Net.Client.Elements.Entities;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AltV.Atlas.Peds.Client;
 
+/// <summary>
+/// Main entry point to client-side ped module
+/// </summary>
 public static class PedModule
 {
     /// <summary>
@@ -19,9 +23,9 @@ public static class PedModule
     /// <returns>The service collection</returns>
     public static IServiceCollection RegisterPedModule( this IServiceCollection serviceCollection )
     {
-        Alt.Log( "RegisterPedModule" );
         serviceCollection.AddTransient<IAtlasClientPed, AtlasPed>( );
         serviceCollection.AddTransient<IPed, Ped>( );
+        serviceCollection.AddTransient<PedTaskFactory>( );
 
         serviceCollection.AddTransient<IEntityFactory<IPed>, AltPedFactory>( );
         
