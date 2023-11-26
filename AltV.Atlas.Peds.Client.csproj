@@ -16,13 +16,13 @@
     
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\" />
-        <PackageReference Include="AltV.Net.Client.Async" Version="15.0.5" />
+        <PackageReference Include="AltV.Net.Client.Async" Version="15.0.6" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' != 'Debug' ">
-        <PackageReference Include="AltV.Atlas.Peds.Shared" Version="1.1.1" />
-        <PackageReference Include="AltV.Atlas.Shared" Version="1.1.0" />
+        <PackageReference Include="AltV.Atlas.Peds.Shared" Version="1.2.0" />
+        <PackageReference Include="AltV.Atlas.Shared" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
