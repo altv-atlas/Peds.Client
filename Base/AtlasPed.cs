@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text.Json;
 using AltV.Atlas.Peds.Client.Delegates;
 using AltV.Atlas.Peds.Client.Interfaces;
 using AltV.Atlas.Peds.Shared.Interfaces;
@@ -18,13 +19,19 @@ public class AtlasPed : Ped, IAtlasClientPed
     /// <summary>
     /// The task the ped is currently doing (eg wander, follow player, etc)
     /// </summary>
+    /// 
+    private readonly JsonTypeConverter<IPedTask> pedTaskJsonConverter = new();
+    
     public IPedTask? CurrentTask
     {
         get
         {
             GetStreamSyncedMetaData( "CurrentTask", out string? taskJson );
-            Alt.Log( $"current task: { taskJson }" );
-            return TypeConverter.FromJson<IPedTask>( taskJson, "Id" );
+
+            if( taskJson is null )
+                return default;
+            
+            return JsonSerializer.Deserialize<IPedTask>( taskJson, JsonOptions.WithConverters(pedTaskJsonConverter));
         }
     }
     
@@ -73,13 +80,15 @@ public class AtlasPed : Ped, IAtlasClientPed
             {
                 if( oldValue is string oldValueString )
                 {
-                    var oldTask = TypeConverter.FromJson<IPedTask>( oldValueString, "Id" );
-                    oldTask?.OnStop( );
+                    Alt.Log( $"old val: {oldValueString}"  );
+                    var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithConverters(pedTaskJsonConverter));
+                    oldTask?.OnStop( this );
                 }
 
                 if( value is string valueString )
                 {
-                    var newTask = TypeConverter.FromJson<IPedTask>( valueString, "Id" );
+                    Alt.Log( $"new val: {valueString}"  );
+                    var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithConverters(pedTaskJsonConverter));
                     newTask?.OnStart( this );
                 }
 
@@ -121,7 +130,7 @@ public class AtlasPed : Ped, IAtlasClientPed
         Alt.OnGameEntityDestroy -= OnGameEntityDestroy;
         Alt.OnNetOwnerChange -= OnNetOwnerChange;
         Alt.OnStreamSyncedMetaChange -= OnStreamSyncedMetaChange;
-        CurrentTask?.OnStop(  );
+        CurrentTask?.OnStop( this );
     }
 
     /// <summary>

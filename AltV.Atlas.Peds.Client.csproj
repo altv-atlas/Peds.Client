@@ -5,17 +5,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <Nullable>enable</Nullable>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
         <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/altv-atlas/Peds.Client.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PublishUrl>https://github.com/altv-atlas</PublishUrl>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputPath>G:\ALTV DEV\_atlas\altv-server\resources\altas-client-cs</OutputPath>
     </PropertyGroup>
     
     <ItemGroup>
