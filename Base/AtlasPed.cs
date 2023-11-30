@@ -26,7 +26,7 @@ public class AtlasPed : Ped, IAtlasClientPed
     {
         get
         {
-            GetStreamSyncedMetaData( "CurrentTask", out string? taskJson );
+            GetStreamSyncedMetaData( "atlas:peds:currentTask", out string? taskJson );
 
             if( taskJson is null )
                 return default;
@@ -53,8 +53,6 @@ public class AtlasPed : Ped, IAtlasClientPed
     /// <param name="id">ID of the ped</param>
     public AtlasPed( ICore core, IntPtr pedNativePointer, uint id ) : base( core, pedNativePointer, id )
     {
-        Alt.Log( "PED SPAWN" );
-        
         Alt.OnGameEntityCreate += OnGameEntityCreate;
         Alt.OnGameEntityDestroy += OnGameEntityDestroy;
         Alt.OnNetOwnerChange += OnNetOwnerChange;
@@ -73,21 +71,18 @@ public class AtlasPed : Ped, IAtlasClientPed
         if( target is not IAtlasClientPed atlasPed || atlasPed.Id != Id || NetworkOwner != Alt.LocalPlayer )
             return;
 
-        Alt.Log( $"OnStreamSyncedMetaChange"  );
         switch( key )
         {
-            case "CurrentTask":
+            case "atlas:peds:currentTask":
             {
                 if( oldValue is string oldValueString )
                 {
-                    Alt.Log( $"old val: {oldValueString}"  );
                     var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithConverters(pedTaskJsonConverter));
                     oldTask?.OnStop( this );
                 }
 
                 if( value is string valueString )
                 {
-                    Alt.Log( $"new val: {valueString}"  );
                     var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithConverters(pedTaskJsonConverter));
                     newTask?.OnStart( this );
                 }
@@ -106,7 +101,6 @@ public class AtlasPed : Ped, IAtlasClientPed
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
             return;
         
-        Alt.Log( $"OnGameEntityCreate for ped {Id}" );
         if( NetworkOwner != Alt.LocalPlayer )
             return;
         
@@ -122,7 +116,6 @@ public class AtlasPed : Ped, IAtlasClientPed
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
             return;
         
-        Alt.Log( $"OnGameEntityDestroy for ped {Id}" );
         if( NetworkOwner != Alt.LocalPlayer )
             return;
 
@@ -144,7 +137,6 @@ public class AtlasPed : Ped, IAtlasClientPed
         if( entity is not IAtlasClientPed atlasPed || atlasPed.Id != Id )
             return;
         
-        Alt.Log( $"OnNetOwnerChange for ped {Id}" );
         if( NetworkOwner != Alt.LocalPlayer )
             return;
         
@@ -156,7 +148,6 @@ public class AtlasPed : Ped, IAtlasClientPed
     /// </summary>
     protected virtual void OnPedSpawn( )
     {
-        Alt.Log( "OnPedSpawn" );
         SetDefaults(  );
 
         CurrentTask?.OnStart( this );
@@ -169,7 +160,6 @@ public class AtlasPed : Ped, IAtlasClientPed
     /// </summary>
     protected virtual void SetDefaults( )
     {
-        Alt.Log( $"SetDefaults" );
         Alt.Natives.SetEntityAsMissionEntity( ScriptId, true, false );
         Alt.Natives.SetBlockingOfNonTemporaryEvents( ScriptId, true );
         Alt.Natives.TaskSetBlockingOfNonTemporaryEvents( ScriptId, true );

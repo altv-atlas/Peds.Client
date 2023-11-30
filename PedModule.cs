@@ -29,6 +29,7 @@ public static class PedModule
 
         serviceCollection.AddTransient<IEntityFactory<IPed>, AltPedFactory>( );
         
+        Alt.Log( "[ATLAS] Ped Module Registered!" );
         return serviceCollection;
     }
 }

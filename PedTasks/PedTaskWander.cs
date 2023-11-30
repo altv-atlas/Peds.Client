@@ -29,11 +29,9 @@ public class PedTaskWander : PedTaskWanderBase
     /// <param name="sharedPed">The ped that starts the task</param>
     public override void OnStart( ISharedPed sharedPed )
     {
-        Alt.Log( "OnStart PedTaskWander 1" );
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "OnStart PedTaskWander 2" );
         Alt.Natives.TaskWanderInArea( ped.ScriptId, Position.X, Position.Y, Position.Z, Radius, MinLength, TimeBetweenWalks );
     }
 }

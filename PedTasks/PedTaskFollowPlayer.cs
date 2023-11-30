@@ -29,8 +29,6 @@ public class PedTaskFollowPlayer : PedTaskFollowPlayerBase
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "OnStart PedTaskFollowPlayer" );
-
         var player = Alt.GetAllPlayers( ).FirstOrDefault( p => p.RemoteId == TargetId );
 
         if( player is null )

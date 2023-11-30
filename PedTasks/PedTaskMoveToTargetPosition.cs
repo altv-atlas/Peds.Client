@@ -32,7 +32,5 @@ public class PedTaskMoveToTargetPosition : PedTaskMoveToTargetPositionBase
         if( sharedPed is not IAtlasClientPed ped )
             return;
         
-        Alt.Log( "OnStart PedTaskMoveToTargetPosition" );
-
     }
 }

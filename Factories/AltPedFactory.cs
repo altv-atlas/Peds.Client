@@ -31,7 +31,6 @@ public class AltPedFactory : IEntityFactory<IPed>
     /// <returns>A new atlas ped</returns>
     public IPed Create( ICore core, IntPtr entityPointer, uint id )
     {
-        Alt.Log( "AltPedFactory Create" );
         return ActivatorUtilities.CreateInstance<AtlasPed>( _serviceProvider, core, entityPointer, id );
     }
 }
