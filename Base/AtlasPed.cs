@@ -2,6 +2,7 @@
 using System.Text.Json;
 using AltV.Atlas.Peds.Client.Delegates;
 using AltV.Atlas.Peds.Client.Interfaces;
+using AltV.Atlas.Peds.Shared;
 using AltV.Atlas.Peds.Shared.Interfaces;
 using AltV.Atlas.Shared.Converters;
 using AltV.Net.Client;
@@ -26,7 +27,7 @@ public class AtlasPed : Ped, IAtlasClientPed
     {
         get
         {
-            GetStreamSyncedMetaData( "atlas:peds:currentTask", out string? taskJson );
+            GetStreamSyncedMetaData( PedConstants.CurrentTaskMetaKey, out string? taskJson );
 
             if( taskJson is null )
                 return default;
@@ -73,7 +74,7 @@ public class AtlasPed : Ped, IAtlasClientPed
 
         switch( key )
         {
-            case "atlas:peds:currentTask":
+            case PedConstants.CurrentTaskMetaKey:
             {
                 if( oldValue is string oldValueString )
                 {
