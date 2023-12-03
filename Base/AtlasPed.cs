@@ -1,6 +1,6 @@
-﻿using System.Numerics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using AltV.Atlas.Peds.Client.Delegates;
+using AltV.Atlas.Peds.Client.Enums;
 using AltV.Atlas.Peds.Client.Interfaces;
 using AltV.Atlas.Peds.Shared;
 using AltV.Atlas.Peds.Shared.Interfaces;
@@ -21,8 +21,11 @@ public class AtlasPed : Ped, IAtlasClientPed
     /// The task the ped is currently doing (eg wander, follow player, etc)
     /// </summary>
     /// 
-    private readonly JsonTypeConverter<IPedTask> pedTaskJsonConverter = new();
+    private readonly JsonTypeConverter<IPedTask> _pedTaskJsonConverter = new();
     
+    /// <summary>
+    /// The task this ped is performing currently
+    /// </summary>
     public IPedTask? CurrentTask
     {
         get
@@ -32,7 +35,7 @@ public class AtlasPed : Ped, IAtlasClientPed
             if( taskJson is null )
                 return default;
             
-            return JsonSerializer.Deserialize<IPedTask>( taskJson, JsonOptions.WithConverters(pedTaskJsonConverter));
+            return JsonSerializer.Deserialize<IPedTask>( taskJson, JsonOptions.WithConverters(_pedTaskJsonConverter));
         }
     }
     
@@ -78,13 +81,13 @@ public class AtlasPed : Ped, IAtlasClientPed
             {
                 if( oldValue is string oldValueString )
                 {
-                    var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithConverters(pedTaskJsonConverter));
+                    var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithConverters(_pedTaskJsonConverter));
                     oldTask?.OnStop( this );
                 }
 
                 if( value is string valueString )
                 {
-                    var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithConverters(pedTaskJsonConverter));
+                    var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithConverters(_pedTaskJsonConverter));
                     newTask?.OnStart( this );
                 }
 
@@ -170,10 +173,12 @@ public class AtlasPed : Ped, IAtlasClientPed
         Alt.Natives.SetPedCanRagdoll( ScriptId, false );
         Alt.Natives.SetPedDiesWhenInjured( ScriptId, false );
         Alt.Natives.SetPedFleeAttributes( ScriptId, 0, false );
-        Alt.Natives.SetPedConfigFlag( ScriptId, 32, false );
-        Alt.Natives.SetPedConfigFlag( ScriptId, 2, true );
-        Alt.Natives.SetPedConfigFlag( ScriptId, 281, true );
-        Alt.Natives.SetPedConfigFlag( ScriptId, 188, true );
+        Alt.Natives.SetPedConfigFlag( ScriptId, ( int ) EPedConfigFlag.CanFlyThruWindscreen, false );
+        Alt.Natives.SetPedConfigFlag( ScriptId, ( int ) EPedConfigFlag.NoCriticalHits, true );
+        Alt.Natives.SetPedConfigFlag( ScriptId, ( int ) EPedConfigFlag.NoWrithe, true );
+        Alt.Natives.SetPedConfigFlag( ScriptId, ( int ) EPedConfigFlag.ShouldFixIfNoCollision, true );
+        Alt.Natives.SetPedConfigFlag( ScriptId, (int) EPedConfigFlag.DisableHurt, true );
+        Alt.Natives.SetPedConfigFlag( ScriptId, (int) EPedConfigFlag.KillWhenTrapped, true );
         Alt.Natives.SetPedGetOutUpsideDownVehicle( ScriptId, false );
         Alt.Natives.SetPedCanEvasiveDive( ScriptId, false );
         Alt.Natives.SetPedNeverLeavesGroup( ScriptId, true );
