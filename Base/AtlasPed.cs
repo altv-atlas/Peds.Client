@@ -17,25 +17,23 @@ namespace AltV.Atlas.Peds.Client.Base;
 /// </summary>
 public class AtlasPed : Ped, IAtlasClientPed
 {
-    /// <summary>
-    /// The task the ped is currently doing (eg wander, follow player, etc)
-    /// </summary>
-    /// 
-    private readonly JsonTypeConverter<IPedTask> _pedTaskJsonConverter = new();
+    private readonly JsonTypeResolver<IPedTask> _pedTaskJsonTypeResolver = new();
     
     /// <summary>
-    /// The task this ped is performing currently
+    /// The task the ped is currently doing (eg wander, follow player, etc)
     /// </summary>
     public IPedTask? CurrentTask
     {
         get
         {
-            GetStreamSyncedMetaData( PedConstants.CurrentTaskMetaKey, out string? taskJson );
+            if (!GetStreamSyncedMetaData(PedConstants.CurrentTaskMetaKey, out string? taskJson))
+                return default;
 
             if( taskJson is null )
                 return default;
             
-            return JsonSerializer.Deserialize<IPedTask>( taskJson, JsonOptions.WithConverters(_pedTaskJsonConverter));
+            var task = JsonSerializer.Deserialize<IPedTask>( taskJson, JsonOptions.WithTypeResolver(_pedTaskJsonTypeResolver));
+            return task;
         }
     }
     
@@ -81,16 +79,15 @@ public class AtlasPed : Ped, IAtlasClientPed
             {
                 if( oldValue is string oldValueString )
                 {
-                    var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithConverters(_pedTaskJsonConverter));
+                    var oldTask = JsonSerializer.Deserialize<IPedTask>(oldValueString, JsonOptions.WithTypeResolver(_pedTaskJsonTypeResolver));
                     oldTask?.OnStop( this );
                 }
 
                 if( value is string valueString )
                 {
-                    var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithConverters(_pedTaskJsonConverter));
+                    var newTask = JsonSerializer.Deserialize<IPedTask>(valueString, JsonOptions.WithTypeResolver(_pedTaskJsonTypeResolver));
                     newTask?.OnStart( this );
                 }
-
                 break;
             }
         }
